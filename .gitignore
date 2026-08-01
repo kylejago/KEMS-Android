@@ -1,0 +1,14 @@
+.dart_tool/
+.packages
+.pub/
+build/
+android/
+ios/
+linux/
+macos/
+windows/
+web/
+*.iml
+.idea/
+.vscode/
+.DS_Store

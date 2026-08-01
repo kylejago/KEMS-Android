@@ -1,0 +1,50 @@
+name: Build Android
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ['v*']
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Android host project
+        run: |
+          flutter create --platforms=android --org uk.co.kems --project-name kems_companion /tmp/kems_host
+          cp -R /tmp/kems_host/android ./android
+      - name: Configure Android app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          s = s.replace('<application', '<application android:usesCleartextTraffic="true"')
+          s = s.replace('android:label="kems_companion"', 'android:label="KEMS Companion"')
+          p.write_text(s)
+          PY
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build apk --release
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KEMS-Companion-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Publish tagged release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
