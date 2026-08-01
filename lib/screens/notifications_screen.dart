@@ -68,7 +68,9 @@ class NotificationsScreen extends StatelessWidget {
 
   String _value(String id, {String fallback = '—'}) {
     final e = controller.entity(id);
-    if (e == null || ['unknown', 'unavailable'].contains(e.state)) return fallback;
+    if (e == null || ['unknown', 'unavailable'].contains(e.state)) {
+      return fallback;
+    }
     return '${e.state}${e.unit.isEmpty ? '' : ' ${e.unit}'}';
   }
 }

@@ -74,7 +74,9 @@ class AppController extends ChangeNotifier {
 
   Future<void> _startConnection() async {
     final current = config;
-    if (current == null) return;
+    if (current == null) {
+      return;
+    }
     _shuttingDown = false;
     _reconnectTimer?.cancel();
     api?.close();
@@ -97,7 +99,9 @@ class AppController extends ChangeNotifier {
 
   Future<void> _connectSocket() async {
     final currentSocket = socket;
-    if (currentSocket == null || _shuttingDown) return;
+    if (currentSocket == null || _shuttingDown) {
+      return;
+    }
     try {
       await currentSocket.connect(
         onStateChanged: (entity) {
@@ -134,7 +138,9 @@ class AppController extends ChangeNotifier {
       return;
     }
     _reconnectTimer = Timer(const Duration(seconds: 8), () async {
-      if (_shuttingDown || config == null) return;
+      if (_shuttingDown || config == null) {
+        return;
+      }
       try {
         await refresh();
         socket = HomeAssistantSocket(config!);
@@ -149,7 +155,9 @@ class AppController extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
-    if (api == null) return;
+    if (api == null) {
+      return;
+    }
     final states = await api!.getStates();
     entities
       ..clear()

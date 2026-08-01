@@ -9,7 +9,9 @@ class SecureConfigStore {
   Future<AppConfig?> read() async {
     final url = await _storage.read(key: _urlKey);
     final token = await _storage.read(key: _tokenKey);
-    if (url == null || token == null || url.isEmpty || token.isEmpty) return null;
+    if (url == null || token == null || url.isEmpty || token.isEmpty) {
+      return null;
+    }
     return AppConfig(baseUrl: url, token: token);
   }
 

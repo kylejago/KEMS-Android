@@ -9,7 +9,9 @@ class DashboardScreen extends StatelessWidget {
 
   String _value(String id, {String fallback = '—'}) {
     final entity = controller.entity(id);
-    if (entity == null || ['unknown', 'unavailable'].contains(entity.state)) return fallback;
+    if (entity == null || ['unknown', 'unavailable'].contains(entity.state)) {
+      return fallback;
+    }
     return '${entity.state}${entity.unit.isEmpty ? '' : ' ${entity.unit}'}';
   }
 

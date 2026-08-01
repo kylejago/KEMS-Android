@@ -18,7 +18,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   String _value(String id, {String fallback = '—'}) {
     final e = widget.controller.entity(id);
-    if (e == null || ['unknown', 'unavailable'].contains(e.state)) return fallback;
+    if (e == null || ['unknown', 'unavailable'].contains(e.state)) {
+      return fallback;
+    }
     return '${e.state}${e.unit.isEmpty ? '' : ' ${e.unit}'}';
   }
 

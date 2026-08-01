@@ -113,9 +113,13 @@ class HomeAssistantApi {
       () => _client.get(uri, headers: _headers),
       timeout: const Duration(seconds: 20),
     );
-    if (response.statusCode != 200) return const [];
+    if (response.statusCode != 200) {
+      return const [];
+    }
     final decoded = jsonDecode(response.body) as List;
-    if (decoded.isEmpty) return const [];
+    if (decoded.isEmpty) {
+      return const [];
+    }
     return List<Map<String, dynamic>>.from(
       (decoded.first as List).map((e) => Map<String, dynamic>.from(e as Map)),
     );

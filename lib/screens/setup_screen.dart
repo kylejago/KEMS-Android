@@ -26,7 +26,9 @@ class _SetupScreenState extends State<SetupScreen> {
 
   Future<void> _connect() async {
     FocusScope.of(context).unfocus();
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     await widget.controller.saveConfiguration(_url.text, _token.text);
   }
 
