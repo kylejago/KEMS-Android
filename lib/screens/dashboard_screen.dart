@@ -62,7 +62,7 @@ class DashboardScreen extends StatelessWidget {
     ]);
   }
 
-  Widget _summary(String label, String value, {Color color = Colors.white}) => Expanded(child: Column(children: [Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)), const SizedBox(height: 3), Text(label, style: const TextStyle(color: Colors.white45, fontSize: 11))]));
+  Widget _summary(String label, String value, {Color color = Colors.white}) => Expanded(child: Column(children: [Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)), const SizedBox(height: 3), Text(label, style: const TextStyle(color: Colors.white54, fontSize: 11))]));
   Widget _divider() => Container(width: 1, height: 36, color: Colors.white10);
   String _updated() {
     final d = controller.lastUpdated;
