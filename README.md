@@ -70,7 +70,7 @@ Version 0.1 is a complete companion-app foundation and is ready to build and ins
 
 Version 0.2.0 is aligned with the current KEMS 0.6.0-alpha1 diagnostics and its Observe → Learn phase. The app is deliberately read-only until the Home Assistant integration exposes a documented control API. It supports live power, tariff, EV, learning, simulation, gas, whole-home, lifetime, ROI and data-quality entities.
 
-## v0.3.0 Android networking rebuild
+## v0.3.1 Android networking rebuild
 
 This release adds the Android `INTERNET` and `ACCESS_NETWORK_STATE` permissions to release builds and explicitly permits local cleartext HTTP connections for addresses such as `http://192.168.1.111:8123`.
 
