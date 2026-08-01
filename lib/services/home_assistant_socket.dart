@@ -39,7 +39,9 @@ class HomeAssistantSocket {
       await channel.ready.timeout(const Duration(seconds: 12));
     } catch (error) {
       await channel.sink.close();
-      if (!_intentionalClose) onError(error);
+      if (!_intentionalClose) {
+        onError(error);
+      }
       rethrow;
     }
 
@@ -69,13 +71,17 @@ class HomeAssistantSocket {
             final event = data['event'] as Map<String, dynamic>?;
             final eventData = event?['data'] as Map<String, dynamic>?;
             final newState = eventData?['new_state'] as Map<String, dynamic>?;
-            if (newState != null) onStateChanged(HaEntity.fromJson(newState));
+            if (newState != null) {
+              onStateChanged(HaEntity.fromJson(newState));
+            }
             break;
         }
       },
       onError: (Object error) {
         onConnection(false);
-        if (!_intentionalClose) onError(error);
+        if (!_intentionalClose) {
+        onError(error);
+      }
       },
       onDone: () {
         onConnection(false);

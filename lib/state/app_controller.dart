@@ -45,7 +45,9 @@ class AppController extends ChangeNotifier {
 
   Future<void> initialise() async {
     config = await _store.read();
-    if (config != null) await _startConnection();
+    if (config != null) {
+      await _startConnection();
+    }
     loading = false;
     notifyListeners();
   }

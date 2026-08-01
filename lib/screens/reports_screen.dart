@@ -33,13 +33,21 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final parsed = <FlSpot>[];
       for (var i = 0; i < rows.length; i++) {
         final value = double.tryParse(rows[i]['state']?.toString() ?? '');
-        if (value != null) parsed.add(FlSpot(i.toDouble(), value));
+        if (value != null) {
+          parsed.add(FlSpot(i.toDouble(), value));
+        }
       }
-      if (mounted) setState(() => spots = parsed);
+      if (mounted) {
+        setState(() => spots = parsed);
+      }
     } catch (e) {
-      if (mounted) setState(() => error = '$e');
+      if (mounted) {
+        setState(() => error = '$e');
+      }
     } finally {
-      if (mounted) setState(() => loading = false);
+      if (mounted) {
+        setState(() => loading = false);
+      }
     }
   }
 
