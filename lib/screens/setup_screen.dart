@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../state/app_controller.dart';
 
 class SetupScreen extends StatefulWidget {
   const SetupScreen({super.key, required this.controller});
+
   final AppController controller;
 
   @override
@@ -23,6 +25,7 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   Future<void> _connect() async {
+    FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
     await widget.controller.saveConfiguration(_url.text, _token.text);
   }
@@ -40,46 +43,127 @@ class _SetupScreenState extends State<SetupScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Form(
                       key: _formKey,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                        Icon(Icons.bolt, size: 56, color: Theme.of(context).colorScheme.primary),
-                        const SizedBox(height: 16),
-                        Text('Connect KEMS', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineMedium),
-                        const SizedBox(height: 8),
-                        const Text('Enter your Home Assistant address and a Long-Lived Access Token. The token is encrypted on this device.', textAlign: TextAlign.center),
-                        const SizedBox(height: 24),
-                        TextFormField(
-                          controller: _url,
-                          keyboardType: TextInputType.url,
-                          decoration: const InputDecoration(labelText: 'Home Assistant URL', hintText: 'https://home.example.com', border: OutlineInputBorder()),
-                          validator: (value) {
-                            final uri = Uri.tryParse(value?.trim() ?? '');
-                            return uri != null && (uri.scheme == 'http' || uri.scheme == 'https') ? null : 'Enter a valid http or https URL';
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: _token,
-                          obscureText: _obscure,
-                          decoration: InputDecoration(
-                            labelText: 'Long-Lived Access Token',
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off), onPressed: () => setState(() => _obscure = !_obscure)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Icon(
+                            Icons.bolt,
+                            size: 56,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
-                          validator: (value) => (value?.trim().length ?? 0) > 20 ? null : 'Paste the complete token',
-                        ),
-                        if (widget.controller.error != null) ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            'Connect KEMS',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Connect securely to the Home Assistant instance that runs KEMS. Your token is encrypted on this device.',
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          TextFormField(
+                            controller: _url,
+                            keyboardType: TextInputType.url,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            decoration: const InputDecoration(
+                              labelText: 'Home Assistant URL',
+                              hintText: 'http://192.168.1.111:8123',
+                              helperText: 'Use the same address that works in your phone browser.',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              final uri = Uri.tryParse(value?.trim() ?? '');
+                              if (uri == null ||
+                                  !uri.hasAuthority ||
+                                  (uri.scheme != 'http' && uri.scheme != 'https')) {
+                                return 'Enter a complete http or https address';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _token,
+                            obscureText: _obscure,
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            decoration: InputDecoration(
+                              labelText: 'Long-Lived Access Token',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                tooltip: _obscure ? 'Show token' : 'Hide token',
+                                icon: Icon(
+                                  _obscure
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () =>
+                                    setState(() => _obscure = !_obscure),
+                              ),
+                            ),
+                            validator: (value) =>
+                                (value?.trim().length ?? 0) > 20
+                                    ? null
+                                    : 'Paste the complete token',
+                          ),
+                          if (widget.controller.error != null) ...[
+                            const SizedBox(height: 16),
+                            Material(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .errorContainer,
+                              borderRadius: BorderRadius.circular(12),
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onErrorContainer,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        widget.controller.error!,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onErrorContainer,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: 20),
+                          FilledButton.icon(
+                            onPressed:
+                                widget.controller.loading ? null : _connect,
+                            icon: widget.controller.loading
+                                ? const SizedBox.square(
+                                    dimension: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.link),
+                            label: const Text('Connect to Home Assistant'),
+                          ),
                           const SizedBox(height: 12),
-                          Text(widget.controller.error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                          const Text(
+                            'Local HTTP addresses are supported. Remote access should use HTTPS.',
+                            textAlign: TextAlign.center,
+                          ),
                         ],
-                        const SizedBox(height: 20),
-                        FilledButton.icon(
-                          onPressed: widget.controller.loading ? null : _connect,
-                          icon: widget.controller.loading
-                              ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                              : const Icon(Icons.link),
-                          label: const Text('Connect to Home Assistant'),
-                        ),
-                      ]),
+                      ),
                     ),
                   ),
                 ),

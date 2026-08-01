@@ -16,35 +16,76 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
+
       - name: Generate Android host project
         run: |
           flutter create --platforms=android --org uk.co.kems --project-name kems_companion /tmp/kems_host
+          rm -rf android
           cp -R /tmp/kems_host/android ./android
-      - name: Configure Android app
+
+      - name: Configure Android network access and app name
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path('android/app/src/main/AndroidManifest.xml')
-          s = p.read_text()
-          s = s.replace('<application', '<application android:usesCleartextTraffic="true"')
-          s = s.replace('android:label="kems_companion"', 'android:label="KEMS Companion"')
-          p.write_text(s)
+          from xml.etree import ElementTree as ET
+
+          manifest = Path('android/app/src/main/AndroidManifest.xml')
+          tree = ET.parse(manifest)
+          root = tree.getroot()
+          android = 'http://schemas.android.com/apk/res/android'
+          ET.register_namespace('android', android)
+
+          existing = {
+              node.attrib.get(f'{{{android}}}name')
+              for node in root.findall('uses-permission')
+          }
+          for permission in (
+              'android.permission.INTERNET',
+              'android.permission.ACCESS_NETWORK_STATE',
+          ):
+              if permission not in existing:
+                  node = ET.Element('uses-permission')
+                  node.set(f'{{{android}}}name', permission)
+                  root.insert(0, node)
+
+          application = root.find('application')
+          if application is None:
+              raise RuntimeError('Android application element was not found')
+          application.set(f'{{{android}}}label', 'KEMS Companion')
+          application.set(f'{{{android}}}usesCleartextTraffic', 'true')
+
+          tree.write(manifest, encoding='utf-8', xml_declaration=True)
           PY
+
+      - name: Verify Android manifest
+        run: |
+          grep -q 'android.permission.INTERNET' android/app/src/main/AndroidManifest.xml
+          grep -q 'android.permission.ACCESS_NETWORK_STATE' android/app/src/main/AndroidManifest.xml
+          grep -q 'usesCleartextTraffic="true"' android/app/src/main/AndroidManifest.xml
+          cat android/app/src/main/AndroidManifest.xml
+
       - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze
       - run: flutter test
       - run: flutter build apk --release
+
+      - name: Rename release APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk KEMS-Companion-v0.3.0.apk
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: KEMS-Companion-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: KEMS-Companion-v0.3.0-APK
+          path: KEMS-Companion-v0.3.0.apk
+
       - name: Publish tagged release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: KEMS-Companion-v0.3.0.apk
