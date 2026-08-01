@@ -82,3 +82,7 @@ It also adds:
 - safer URL validation;
 - automatic discovery of KEMS sensors and binary sensors;
 - a CI manifest verification step so a release cannot silently omit network access.
+
+## v1.0.1
+
+- Fix Energy Flow screen syntax so Dart formatting and analysis can run.
