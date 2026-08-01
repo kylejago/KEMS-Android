@@ -571,7 +571,7 @@ class _EnergyFlowScreenState extends State<EnergyFlowScreen>
                     child: ListView.separated(
                       shrinkWrap: true,
                       itemCount: entities.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      separatorBuilder: (_, _) => const Divider(height: 1),
                       itemBuilder: (context, index) {
                         final entity = entities[index];
                         return ListTile(

@@ -30,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
             const ListTile(
               leading: Icon(Icons.info_outline),
               title: Text('KEMS Companion'),
-              subtitle: Text('Version 1.4.0 • KEMS integration 0.6 compatible'),
+              subtitle: Text('Version 1.4.1 • KEMS integration 0.6 compatible'),
             ),
           ])),
           const SizedBox(height: 16),
