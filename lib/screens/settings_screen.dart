@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Card(child: Column(children: [
             ListTile(
-              leading: const Icon(Icons.home_assistant),
+              leading: const Icon(Icons.home),
               title: const Text('Home Assistant'),
               subtitle: Text(controller.config?.normalizedBaseUrl ?? 'Not configured'),
             ),
