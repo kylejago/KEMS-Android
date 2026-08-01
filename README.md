@@ -86,3 +86,10 @@ It also adds:
 ## v1.0.2
 
 - Fix Energy Flow screen syntax so Dart formatting and analysis can run.
+
+## v1.1.0 interface
+
+- **Live** contains the measured Home Assistant/KEMS data and a complete dynamic list of non-simulation KEMS entities.
+- **Simulation** contains modelled battery, solar, grid, savings, ROI and proposal outputs, including a complete dynamic list of simulation-related KEMS entities.
+- **Flow** switches between Live and Simulation data. Moving particles show direction; inactive paths stay dim, and particle speed rises with power.
+- Startup now moves immediately into a full-screen Flutter splash while Home Assistant initialises. The native Android splash also uses a full-screen branded background on supported Android versions.

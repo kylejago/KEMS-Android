@@ -16,7 +16,7 @@ class EntityMapping {
   final String gridNetPower = 'sensor.kems_grid_net_power';
   final String gridFlowDirection = 'sensor.kems_grid_flow_direction';
   final String houseLoad = 'sensor.kems_house_load';
-  final String solarPower = 'sensor.kems_simulated_solar_power';
+  final String solarPower = 'sensor.kems_solar_power';
   final String batteryPower = 'sensor.kems_battery_power';
   final String batterySoc = 'sensor.kems_battery_state_of_charge';
   final String evPower = 'sensor.kems_ev_charging_power';
@@ -54,6 +54,16 @@ class EntityMapping {
   final String simulatedGridImportPower = 'sensor.kems_simulated_grid_import_power';
   final String simulatedGridExportPower = 'sensor.kems_simulated_grid_export_power';
   final String simulatedSolarPower = 'sensor.kems_simulated_solar_power';
+  final String simulatedGridNetPower = 'sensor.kems_simulated_grid_net_power';
+  final String simulatedHouseLoadPower = 'sensor.kems_simulated_house_load_power';
+  final String simulatedGridImportToday = 'sensor.kems_simulated_grid_import_today';
+  final String simulatedGridExportToday = 'sensor.kems_simulated_grid_export_today';
+  final String simulatedExportIncomeToday = 'sensor.kems_simulated_export_income_today';
+  final String simulatedSolarGenerationToday = 'sensor.kems_simulated_solar_generation_today';
+  final String simulatedBatteryChargedToday = 'sensor.kems_simulated_battery_charged_today';
+  final String simulatedBatteryToHomeToday = 'sensor.kems_simulated_battery_to_home_today';
+  final String simulatedBatteryExportToday = 'sensor.kems_simulated_battery_export_today';
+  final String simulatedSolarCurtailedToday = 'sensor.kems_simulated_solar_curtailed_today';
 
   // Gas and whole-home
   final String gasUsageToday = 'sensor.kems_gas_usage_today';
