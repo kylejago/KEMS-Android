@@ -74,6 +74,22 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
         ),
+        KemsCard(
+          glow: KemsTheme.green,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.info_outline, color: KemsTheme.green),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Live data is measured by Home Assistant from your configured Octopus, Ohme, meter, battery and solar entities. System profile: ${displayEntity(controller, mapping.systemProfile)}. Battery data: ${controller.isOn(mapping.batteryDataAvailable) ? 'available' : 'not yet available'}.',
+                  style: const TextStyle(color: Colors.white70, height: 1.4),
+                ),
+              ),
+            ],
+          ),
+        ),
         const SectionTitle('Live energy now'),
         GridView.count(
           crossAxisCount: 2,

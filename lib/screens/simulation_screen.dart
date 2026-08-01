@@ -73,6 +73,22 @@ class SimulationScreen extends StatelessWidget {
             ],
           ),
         ),
+        KemsCard(
+          glow: KemsTheme.purple,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.tune_rounded, color: KemsTheme.purple),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'This model simulates the proposed KEMS system using your observed demand, tariff windows and the configured system profile: ${displayEntity(controller, m.systemProfile)}. Investment model: ${displayEntity(controller, m.systemInvestment)}. Installed system: ${controller.isOn(m.systemInstalled) ? 'yes' : 'proposal mode'}.',
+                  style: const TextStyle(color: Colors.white70, height: 1.4),
+                ),
+              ),
+            ],
+          ),
+        ),
         const SectionTitle('Simulated power now'),
         GridView.count(
           crossAxisCount: 2,

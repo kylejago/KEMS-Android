@@ -27,7 +27,7 @@ class _EnergyFlowScreenState extends State<EnergyFlowScreen>
     super.initState();
     animation = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2300),
+      duration: const Duration(milliseconds: 3600),
     )..repeat();
   }
 
@@ -156,7 +156,7 @@ class _EnergyFlowScreenState extends State<EnergyFlowScreen>
                         ),
                         _positionedNode(
                           size,
-                          const Offset(.50, .90),
+                          const Offset(.82, .82),
                           icon: Icons.electric_car_rounded,
                           label: 'EV',
                           value: simulated
@@ -185,8 +185,8 @@ class _EnergyFlowScreenState extends State<EnergyFlowScreen>
               Expanded(
                 child: Text(
                   simulated
-                      ? 'Particles show the direction of KEMS modelled power. Inactive paths remain dim.'
-                      : 'Particles move in the measured direction of energy. Their speed increases with power.',
+                      ? 'A smooth travelling wave shows the direction of KEMS modelled power. Inactive paths remain dim.'
+                      : 'A smooth travelling wave follows the measured direction of energy. Its pace increases with power.',
                   style: const TextStyle(color: Colors.white70, height: 1.4),
                 ),
               ),
@@ -241,8 +241,8 @@ class _EnergyFlowScreenState extends State<EnergyFlowScreen>
         reverse: battery < 0,
       ),
       _Flow(
-        from: const Offset(.50, .75),
-        to: const Offset(.50, .81),
+        from: const Offset(.87, .57),
+        to: const Offset(.82, .73),
         color: KemsTheme.cyan,
         power: ev.abs(),
         active: ev.abs() > .01,
@@ -381,39 +381,68 @@ class _EnergyFlowPainter extends CustomPainter {
       final basePaint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
-        ..strokeWidth = flow.active ? 3 : 2
-        ..color = flow.color.withValues(alpha: flow.active ? .28 : .08);
+        ..strokeWidth = flow.active ? 4 : 2
+        ..color = flow.color.withValues(alpha: flow.active ? .20 : .07);
       canvas.drawPath(path, basePaint);
 
       if (!flow.active) {
         continue;
       }
+
       final metric = path.computeMetrics().first;
-      final speed = (.55 + math.min(flow.power.abs(), 10) / 10 * 1.45);
-      final directionProgress = (progress * speed) % 1;
-      final baseProgress = flow.reverse ? 1 - directionProgress : directionProgress;
-      final count = 4 + math.min(flow.power.abs().round(), 5);
-      for (var index = 0; index < count; index++) {
-        var position = (baseProgress + index / count) % 1;
-        if (flow.reverse) {
-          position = 1 - position;
-        }
-        final tangent = metric.getTangentForOffset(metric.length * position);
-        if (tangent == null) {
-          continue;
-        }
-        final radius = 3.2 + math.min(flow.power.abs(), 8) * .12;
-        canvas.drawCircle(
-          tangent.position,
-          radius * 2.6,
-          Paint()..color = flow.color.withValues(alpha: .08),
-        );
-        canvas.drawCircle(
-          tangent.position,
-          radius,
-          Paint()..color = flow.color.withValues(alpha: .92),
-        );
+      final speed = .38 + math.min(flow.power.abs(), 10) / 10 * .72;
+      var head = (progress * speed) % 1;
+      if (flow.reverse) {
+        head = 1 - head;
       }
+
+      for (var band = 0; band < 3; band++) {
+        final offset = band * .22;
+        var centre = flow.reverse ? head + offset : head - offset;
+        centre %= 1;
+        if (centre < 0) {
+          centre += 1;
+        }
+        _drawWaveBand(canvas, metric, centre, flow.color, band);
+      }
+    }
+  }
+
+  void _drawWaveBand(
+    Canvas canvas,
+    PathMetric metric,
+    double centre,
+    Color color,
+    int band,
+  ) {
+    const span = .18;
+    var start = centre - span / 2;
+    var end = centre + span / 2;
+    final glow = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 11 - band * 1.5
+      ..color = color.withValues(alpha: .07 - band * .012);
+    final core = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 3.6 - band * .45
+      ..color = color.withValues(alpha: .82 - band * .16);
+
+    void drawRange(double a, double b) {
+      final segment = metric.extractPath(metric.length * a, metric.length * b);
+      canvas.drawPath(segment, glow);
+      canvas.drawPath(segment, core);
+    }
+
+    if (start < 0) {
+      drawRange(0, end);
+      drawRange(1 + start, 1);
+    } else if (end > 1) {
+      drawRange(start, 1);
+      drawRange(0, end - 1);
+    } else {
+      drawRange(start, end);
     }
   }
 

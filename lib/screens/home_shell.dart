@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../state/app_controller.dart';
 import '../widgets/kems_ui.dart';
-import 'dashboard_screen.dart';
+import 'data_screen.dart';
 import 'energy_flow_screen.dart';
 import 'notifications_screen.dart';
 import 'reports_screen.dart';
 import 'settings_screen.dart';
-import 'simulation_screen.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key, required this.controller});
@@ -24,9 +23,8 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      DashboardScreen(controller: widget.controller),
-      SimulationScreen(controller: widget.controller),
       EnergyFlowScreen(controller: widget.controller),
+      DataScreen(controller: widget.controller),
       ReportsScreen(controller: widget.controller),
       NotificationsScreen(controller: widget.controller),
       SettingsScreen(controller: widget.controller),
@@ -49,19 +47,14 @@ class _HomeShellState extends State<HomeShell> {
         onDestinationSelected: (value) => setState(() => index = value),
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.sensors_outlined),
-            selectedIcon: Icon(Icons.sensors),
-            label: 'Live',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.science_outlined),
-            selectedIcon: Icon(Icons.science),
-            label: 'Simulation',
-          ),
-          NavigationDestination(
             icon: Icon(Icons.hub_outlined),
             selectedIcon: Icon(Icons.hub),
             label: 'Flow',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.dataset_outlined),
+            selectedIcon: Icon(Icons.dataset),
+            label: 'Data',
           ),
           NavigationDestination(
             icon: Icon(Icons.bar_chart_outlined),
