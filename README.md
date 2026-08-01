@@ -87,14 +87,14 @@ It also adds:
 
 - Fix Energy Flow screen syntax so Dart formatting and analysis can run.
 
-## v1.2.1 interface
+## v1.4.0 interface
 
 - **Live** contains the measured Home Assistant/KEMS data and a complete dynamic list of non-simulation KEMS entities.
 - **Simulation** contains modelled battery, solar, grid, savings, ROI and proposal outputs, including a complete dynamic list of simulation-related KEMS entities.
 - **Flow** switches between Live and Simulation data. Moving particles show direction; inactive paths stay dim, and particle speed rises with power.
 - Startup now moves immediately into a full-screen Flutter splash while Home Assistant initialises. The native Android splash also uses a full-screen branded background on supported Android versions.
 
-## Version 1.2.1
+## Version 1.4.0
 
 - Defaults new connections to `http://homeassistant.local:8123/` while keeping the server editable.
 - Opens on Flow by default.
@@ -103,3 +103,11 @@ It also adds:
 - Adds Live and Simulation selectors to Reports.
 - Adds model/system context to data and reports.
 - Clips and sizes report charts correctly.
+
+### Version 1.4.0 flow intelligence
+
+- Smoothly interpolates between Home Assistant power updates.
+- Shows a live input-versus-use balance check.
+- Adds tap-to-expand details for Solar, Grid, Home, Battery and EV.
+- Displays source data age on every flow node.
+- Adds a KEMS decision ribbon above the flow diagram.

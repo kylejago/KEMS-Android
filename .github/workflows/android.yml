@@ -84,16 +84,16 @@ jobs:
       - run: flutter build apk --release
 
       - name: Rename release APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk KEMS-Companion-v1.2.1.apk
+        run: cp build/app/outputs/flutter-apk/app-release.apk KEMS-Companion-v1.4.0.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: KEMS-Companion-v1.2.1-APK
-          path: KEMS-Companion-v1.2.1.apk
+          name: KEMS-Companion-v1.4.0-APK
+          path: KEMS-Companion-v1.4.0.apk
 
       - name: Publish tagged release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: KEMS-Companion-v1.2.1.apk
+          files: KEMS-Companion-v1.4.0.apk
